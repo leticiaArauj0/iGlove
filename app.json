@@ -4,7 +4,6 @@
     "slug": "iGlove",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
     "scheme": "iglove",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -12,10 +11,6 @@
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
       "edgeToEdgeEnabled": true
     },
     "web": {
@@ -37,6 +32,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "49915e62-85c0-4cae-852d-cad38042a283"
+      }
     }
   }
 }
