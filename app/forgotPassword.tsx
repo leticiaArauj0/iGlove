@@ -1,7 +1,9 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
-import { Link, router } from "expo-router"
+import { router } from "expo-router"
 import { Arrow } from "@/components/Arrow";
 import { useState } from "react";
+import { isEmailRegistered } from "@/utils/userStorage";
+import { generateAndSaveCode } from '@/utils/codeStorage';
 
 export default function forgotPassword() {
     const [email, setEmail] = useState('')
@@ -22,13 +24,24 @@ export default function forgotPassword() {
     }
 
     const handleCode = async () => {
-        if (!validateFields()) return
-        router.push("/code");
+        if (!validateFields()) return;
+
+        const exists = await isEmailRegistered(email.trim());
+        if (!exists) {
+            setMessage("E-mail não encontrado.");
+            return;
+        }
+
+        const code = await generateAndSaveCode(email.trim());
+
+        alert(`Seu código de verificação é: ${code}`);
+
+        router.push({ pathname: '/code', params: { email: email.trim() } });
     }
 
     return(
         <View style={styles.container}>
-            <Arrow link={`./login`} color="#000"/>
+            <Arrow color="#000"/>
 
             <Text style={{fontSize: 40, width: 320, fontWeight: 600}}>Esqueceu sua senha?</Text>
             <Text style={{fontSize: 20, fontWeight: '600', color: '#272459'}}>Por favor, digite seu e-mail:</Text>

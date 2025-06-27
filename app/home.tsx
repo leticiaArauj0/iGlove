@@ -12,7 +12,7 @@ export default function Home() {
         <View>
             {
                 openNav ?
-                <NavBar close={() => setOpenNav(false)} />
+                <NavBar close={() => setOpenNav(false)}/>
                 :
                 null
             }

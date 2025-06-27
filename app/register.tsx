@@ -2,6 +2,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-nativ
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { Arrow } from "@/components/Arrow";
+import { saveUser, isEmailRegistered } from "@/utils/userStorage";
 
 export default function Register() {
     const [name, setName] = useState<string>("")
@@ -53,14 +54,27 @@ export default function Register() {
     }
 
     const handleRegister = async () => {
-        if (!validateFields()) return
-        
-        router.push("/rightRegister");
+        const alreadyExists = await isEmailRegistered(email.trim());
+
+        if (alreadyExists) {
+        setMessage("E-mail já cadastrado.")
+        return;
+        }
+
+        await saveUser({
+        name: name.trim(),
+        age: age.trim(),
+        email: email.trim(),
+        password: password.trim(),
+        });
+
+        setMessage("")
+        router.push("/rightRegister")
     }
 
     return (
         <View style={styles.container}>
-            <Arrow link={`./begin`} color="#000"/>
+            <Arrow color="#000"/>
             
             <Text style={{fontSize: 36, fontWeight: '700', width: 320}}>Criar Conta</Text>
 

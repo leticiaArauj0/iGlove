@@ -1,11 +1,32 @@
+import { Link, router } from "expo-router";
 import { EnvelopeSimple, List, LockKey, SignOut, User } from "phosphor-react-native";
 import { View,Text, StyleSheet, GestureResponderEvent, TouchableOpacity } from "react-native";
-
+import { useEffect, useState} from "react";
+import { getLoggedUser, removeLoggedUser } from "@/utils/authStorage";
 interface NavBarProps {
-    close: ((event: GestureResponderEvent) => void) | undefined
+  close: ((event: GestureResponderEvent) => void) | undefined;
 }
 
 export default function NavBar({close}: NavBarProps) {
+    const [name, setName] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+
+    useEffect(() => {
+    const loadUser = async () => {
+        const user = await getLoggedUser();
+        if (user) {
+        setName(user.name);
+        setEmail(user.email);
+        }
+    };
+    loadUser();
+    }, []);
+
+    const handleLogout = async () => {
+        await removeLoggedUser()
+        router.push("/")
+    }
+
     return(
         <View style={styles.container}>
             <View>
@@ -22,7 +43,7 @@ export default function NavBar({close}: NavBarProps) {
                         <View style={styles.containerIcon}>
                             <User size={30} color="#fff" weight="fill" />
                         </View>
-                        <Text style={styles.text}>Nome</Text>
+                        <Text style={styles.text}>{name}</Text>
                     </View>
                 </View>
                 <View>
@@ -31,25 +52,25 @@ export default function NavBar({close}: NavBarProps) {
                         <View style={styles.containerIcon}>
                             <EnvelopeSimple size={30} color="#fff" />
                         </View>
-                        <Text style={styles.text}>Email</Text>
+                        <Text style={styles.text}>{email}</Text>
                     </View>
                 </View>
                 <View>
                     <Text style={styles.title}>Segurança</Text>
-                    <View style={styles.containerInfo}>
+                    <TouchableOpacity onPress={() => {router.push("/newPassword")}} style={styles.containerInfo}>
                         <View style={styles.containerIcon}>
                             <LockKey size={30} color="#fff" weight="fill" />
                         </View>
                         <Text style={styles.text}>Mudar Senha</Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </View>
-            <View style={[styles.containerInfo, {marginBottom: 20}]}>
+            <TouchableOpacity style={[styles.containerInfo, {marginBottom: 20}]} onPress={handleLogout}>
                 <View>
                     <SignOut size={36} color="#fff" weight="fill" />
                 </View>
                 <Text style={{textTransform: 'uppercase', color: '#fff', fontSize: 18}}>Sair</Text>
-            </View>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -84,7 +105,7 @@ const styles = StyleSheet.create({
     containerIcon: {
         borderColor: '#fff',
         borderWidth: 1,
-        width: 40,
+        width: 45,
         height: 40,
         borderRadius: 50,
         justifyContent: 'center',

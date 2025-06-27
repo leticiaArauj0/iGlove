@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { Arrow } from "@/components/Arrow";
+import { findUser } from "@/utils/userStorage";
+import { saveLoggedUser } from "@/utils/authStorage";
 
 export default function Login() {
     const [email, setEmail] = useState<string>("");
@@ -36,14 +38,20 @@ export default function Login() {
     }
 
     const handleLogin = async () => {
-        if (!validateFields()) return
+        const user = await findUser(email.trim(), password.trim());
 
-        router.push('/home')
+        if (!user) {
+        setMessage("E-mail ou senha incorretos.");
+        return;
+        }
+
+        await saveLoggedUser(user)
+        router.push("/home")
     }   
 
     return (
         <View style={styles.container}>
-            <Arrow link={`./begin`} color="#000"/>
+            <Arrow color="#000"/>
             
             <Text style={{fontSize: 36, fontWeight: '700', width: 320}}>Login</Text>
     

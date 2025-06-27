@@ -5,7 +5,7 @@ import { View,Text, TouchableOpacity, StyleSheet } from "react-native";
 export default function rightCode() {
     return(
         <View style={styles.container}>
-            <Arrow link={`./code`} color="#fff" />
+            <Arrow color="#fff" />
 
             <Text style={{fontSize: 40, fontWeight: 600, width: 300, textAlign: 'center', lineHeight: 50, color: '#fff'}}>Código confirmado!</Text>
 
